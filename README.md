@@ -27,6 +27,8 @@ In today’s rapidly evolving decentralized finance (DeFi) ecosystem, managing a
 
 - **Predictive Analytics**: By incorporating machine learning algorithms, MetaVault forecasts potential risks and returns, providing users with actionable insights that can guide their investment strategies. This predictive capability adds a layer of intelligence to asset management. 🤖📈
 
+![risk.png](https://cdn.dorahacks.io/static/files/1916c1a6466ac4de3655de74044bc643.png)
+
 #### Advanced DeFi Portfolio Management 📑
 
 - **Asset Tracking**: The platform enables users to monitor all DeFi activities, such as staking, lending, borrowing, and liquidity provision, across multiple blockchains from one place. This comprehensive tracking helps users keep a holistic view of their DeFi investments. 📈🔗
