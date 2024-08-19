@@ -14,6 +14,9 @@ In today’s rapidly evolving decentralized finance (DeFi) ecosystem, managing a
 
 - **Comprehensive Asset View**: Users can visualize all their assets across different blockchains—such as Ethereum, Cosmos, and Bitcoin—in a single, interactive dashboard. This centralized view allows for easier management and monitoring of diverse investments. 🌍💰
   
+
+![assety.png](https://cdn.dorahacks.io/static/files/1916b7085b069f7aea3d17b458ea0cb5.png)
+
 - **Seamless Integration with zrSign**: The platform utilizes zrSign’s cross-chain technology to facilitate secure and efficient asset management and transfers across various blockchain ecosystems. This ensures that users can handle assets seamlessly without dealing with the complexities of different blockchain protocols. 🔗🔒
 
 ![metabault.png](https://cdn.dorahacks.io/static/files/1916760de66a8ddc9014e3440eba92c6.png)
@@ -27,6 +30,8 @@ In today’s rapidly evolving decentralized finance (DeFi) ecosystem, managing a
 #### Advanced DeFi Portfolio Management 📑
 
 - **Asset Tracking**: The platform enables users to monitor all DeFi activities, such as staking, lending, borrowing, and liquidity provision, across multiple blockchains from one place. This comprehensive tracking helps users keep a holistic view of their DeFi investments. 📈🔗
+
+![DEFI.png](https://cdn.dorahacks.io/static/files/1916b70e635f0ce76df5cdf41119a459.png)
 
 - **Performance Insights**: MetaVault offers detailed analytics on portfolio performance, including return on investment (ROI), risk exposure, and growth trends. These insights help users understand how their investments are performing and make informed decisions. 📊💡
 

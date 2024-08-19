@@ -1,305 +1,377 @@
-/*!
-  _   _  ___  ____  ___ ________  _   _   _   _ ___   
- | | | |/ _ \|  _ \|_ _|__  / _ \| \ | | | | | |_ _| 
- | |_| | | | | |_) || |  / / | | |  \| | | | | || | 
- |  _  | |_| |  _ < | | / /| |_| | |\  | | |_| || |
- |_| |_|\___/|_| \_\___/____\___/|_| \_|  \___/|___|
-                                                                                                                                                                                                                                                                                                                                       
-=========================================================
-* Horizon UI - v1.1.0
-=========================================================
-
-* Product Page: https://www.horizon-ui.com/
-* Copyright 2023 Horizon UI (https://www.horizon-ui.com/)
-
-* Designed and Coded by Simmmple
-
-=========================================================
-
-* The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-
-*/
-
-import React from "react";
-
-// Chakra imports
+import React, { useState } from "react";
 import {
   Box,
   Button,
   Flex,
   Grid,
-  Link,
   Text,
   useColorModeValue,
   SimpleGrid,
+  Image,
+  Select,
+  Modal,
+  ModalOverlay,
+  ModalContent,
+  ModalHeader,
+  ModalFooter,
+  ModalBody,
+  ModalCloseButton,
+  useDisclosure,
 } from "@chakra-ui/react";
 
-// Custom components
-import Banner from "views/admin/DeFiActivities/components/Banner";
-import TableTopCreators from "views/admin/DeFiActivities/components/TableTopCreators";
-import HistoryItem from "views/admin/DeFiActivities/components/HistoryItem";
-import NFT from "components/card/NFT";
+import btcIcon from "assets/img/icons/Btc.jpg";
+import ethIcon from "assets/img/icons/Eth.png";
+import adaIcon from "assets/img/icons/Ada.jpg";
+import dotIcon from "assets/img/icons/Dot.png";
+import bnbIcon from "assets/img/icons/Bnb.png";
+import xrpIcon from "assets/img/icons/xrp.png";
+import chainlinkIcon from "assets/img/icons/chainlink.png";
+import ltcIcon from "assets/img/icons/litecoin.png";
 import Card from "components/card/Card.js";
+import Active from "views/admin/DeFiActivities/components/Active"; 
 
-// Assets
-import Nft1 from "assets/img/nfts/Nft1.png";
-import Nft2 from "assets/img/nfts/Nft2.png";
-import Nft3 from "assets/img/nfts/Nft3.png";
-import Nft4 from "assets/img/nfts/Nft4.png";
-import Nft5 from "assets/img/nfts/Nft5.png";
-import Nft6 from "assets/img/nfts/Nft6.png";
-import Avatar1 from "assets/img/avatars/avatar1.png";
-import Avatar2 from "assets/img/avatars/avatar2.png";
-import Avatar3 from "assets/img/avatars/avatar3.png";
-import Avatar4 from "assets/img/avatars/avatar4.png";
-import tableDataTopCreators from "views/admin/DeFiActivities/variables/tableDataTopCreators.json";
-import { tableColumnsTopCreators } from "views/admin/DeFiActivities/variables/tableColumnsTopCreators";
+const stakingOpportunities = [
+  {
+    id: 1,
+    name: 'ETH Staking Opportunity',
+    description: 'Earn rewards by staking Ethereum tokens.',
+    apy: '5%',
+    lockInPeriod: '1 month - 6 months',
+    requirements: 'Minimum 0.1 ETH',
+    image: ethIcon,
+    formFields: [
+      { label: 'ETH Amount', type: 'number', placeholder: 'Enter ETH amount' },
+      { label: 'Staking Period', type: 'select', options: ['1 month', '3 months', '6 months'] }
+    ]
+  },
+  {
+    id: 2,
+    name: 'BTC Staking Opportunity',
+    description: 'Stake Bitcoin for monthly rewards.',
+    apy: '7%',
+    lockInPeriod: '1 month - 6 months',
+    requirements: 'Minimum 0.01 BTC',
+    image: btcIcon,
+    formFields: [
+      { label: 'BTC Amount', type: 'number', placeholder: 'Enter BTC amount' },
+      { label: 'Staking Period', type: 'select', options: ['1 month', '3 months', '6 months'] }
+    ]
+  },
+  {
+    id: 3,
+    name: 'ADA Staking Opportunity',
+    description: 'Stake ADA tokens and earn ADA rewards.',
+    apy: '6.5%',
+    lockInPeriod: '1 month - 6 months',
+    requirements: 'Minimum 50 ADA',
+    image: adaIcon,
+    formFields: [
+      { label: 'ADA Amount', type: 'number', placeholder: 'Enter ADA amount' },
+      { label: 'Staking Period', type: 'select', options: ['1 month', '3 months', '6 months'] }
+    ]
+  },
+  {
+    id: 4,
+    name: 'DOT Staking Opportunity',
+    description: 'Stake DOT tokens for weekly rewards.',
+    apy: '8%',
+    lockInPeriod: '1 month - 6 months',
+    requirements: 'Minimum 10 DOT',
+    image: dotIcon,
+    formFields: [
+      { label: 'DOT Amount', type: 'number', placeholder: 'Enter DOT amount' },
+      { label: 'Staking Period', type: 'select', options: ['1 month', '3 months', '6 months'] }
+    ]
+  },
+  {
+    id: 5,
+    name: 'BNB Staking Opportunity',
+    description: 'Earn BNB rewards by staking BNB tokens.',
+    apy: '6%',
+    lockInPeriod: '1 month - 6 months',
+    requirements: 'Minimum 0.5 BNB',
+    image: bnbIcon,
+    formFields: [
+      { label: 'BNB Amount', type: 'number', placeholder: 'Enter BNB amount' },
+      { label: 'Staking Period', type: 'select', options: ['1 month', '3 months', '6 months'] }
+    ]
+  },
+  {
+    id: 6,
+    name: 'XRP Staking Opportunity',
+    description: 'Stake XRP tokens for daily rewards.',
+    apy: '9%',
+    lockInPeriod: '1 month - 6 months',
+    requirements: 'Minimum 100 XRP',
+    image: xrpIcon,
+    formFields: [
+      { label: 'XRP Amount', type: 'number', placeholder: 'Enter XRP amount' },
+      { label: 'Staking Period', type: 'select', options: ['1 month', '3 months', '6 months'] }
+    ]
+  },
+];
 
-export default function Marketplace() {
-  // Chakra Color Mode
+const lendingBorrowingPlatforms = [
+  {
+    id: 1,
+    name: 'Platform A',
+    description: 'Lend or borrow assets with competitive rates.',
+    rates: 'Interest rates vary by asset',
+    terms: 'Flexible terms available',
+    image: chainlinkIcon,
+  },
+  {
+    id: 2,
+    name: 'Platform B',
+    description: 'Access a variety of lending and borrowing options.',
+    rates: 'Up to 12% APY for lenders',
+    terms: 'Short-term and long-term options',
+    image: ltcIcon,
+  },
+  {
+    id: 4,
+    name: 'Platform D',
+    description: 'Secure and easy-to-use platform for both lenders and borrowers.',
+    rates: 'Competitive rates based on asset type',
+    terms: 'Short and long-term options available',
+    image: bnbIcon,
+  },
+  {
+    id: 5,
+    name: 'Platform E',
+    description: 'Offers innovative lending and borrowing features with low fees.',
+    rates: 'High rates for both lenders and borrowers',
+    terms: 'Flexible and dynamic terms',
+    image: xrpIcon,
+  },
+];
+
+const Marketplace = () => {
   const textColor = useColorModeValue("secondaryGray.900", "white");
-  const textColorBrand = useColorModeValue("brand.500", "white");
-  return (
-    <Box pt={{ base: "180px", md: "80px", xl: "80px" }}>
-      {/* Main Fields */}
-      <Grid
-        mb='20px'
-        gridTemplateColumns={{ xl: "repeat(3, 1fr)", "2xl": "1fr 0.46fr" }}
-        gap={{ base: "20px", xl: "20px" }}
-        display={{ base: "block", xl: "grid" }}>
-        <Flex
-          flexDirection='column'
-          gridArea={{ xl: "1 / 1 / 2 / 3", "2xl": "1 / 1 / 2 / 2" }}>
-          <Banner />
-          <Flex direction='column'>
-            <Flex
-              mt='45px'
-              mb='20px'
-              justifyContent='space-between'
-              direction={{ base: "column", md: "row" }}
-              align={{ base: "start", md: "center" }}>
-              <Text color={textColor} fontSize='2xl' ms='24px' fontWeight='700'>
-                Trending NFTs
-              </Text>
-              <Flex
-                align='center'
-                me='20px'
-                ms={{ base: "24px", md: "0px" }}
-                mt={{ base: "20px", md: "0px" }}>
-                <Link
-                  color={textColorBrand}
-                  fontWeight='500'
-                  me={{ base: "34px", md: "44px" }}
-                  to='#art'>
-                  Art
-                </Link>
-                <Link
-                  color={textColorBrand}
-                  fontWeight='500'
-                  me={{ base: "34px", md: "44px" }}
-                  to='#music'>
-                  Music
-                </Link>
-                <Link
-                  color={textColorBrand}
-                  fontWeight='500'
-                  me={{ base: "34px", md: "44px" }}
-                  to='#collectibles'>
-                  Collectibles
-                </Link>
-                <Link color={textColorBrand} fontWeight='500' to='#sports'>
-                  Sports
-                </Link>
-              </Flex>
-            </Flex>
-            <SimpleGrid columns={{ base: 1, md: 3 }} gap='20px'>
-              <NFT
-                name='Abstract Colors'
-                author='By Esthera Jackson'
-                bidders={[
-                  Avatar1,
-                  Avatar2,
-                  Avatar3,
-                  Avatar4,
-                  Avatar1,
-                  Avatar1,
-                  Avatar1,
-                  Avatar1,
-                ]}
-                image={Nft1}
-                currentbid='0.91 ETH'
-                download='#'
-              />
-              <NFT
-                name='ETH AI Brain'
-                author='By Nick Wilson'
-                bidders={[
-                  Avatar1,
-                  Avatar2,
-                  Avatar3,
-                  Avatar4,
-                  Avatar1,
-                  Avatar1,
-                  Avatar1,
-                  Avatar1,
-                ]}
-                image={Nft2}
-                currentbid='0.91 ETH'
-                download='#'
-              />
-              <NFT
-                name='Mesh Gradients '
-                author='By Will Smith'
-                bidders={[
-                  Avatar1,
-                  Avatar2,
-                  Avatar3,
-                  Avatar4,
-                  Avatar1,
-                  Avatar1,
-                  Avatar1,
-                  Avatar1,
-                ]}
-                image={Nft3}
-                currentbid='0.91 ETH'
-                download='#'
-              />
-            </SimpleGrid>
-            <Text
-              mt='45px'
-              mb='36px'
-              color={textColor}
-              fontSize='2xl'
-              ms='24px'
-              fontWeight='700'>
-              Recently Added
-            </Text>
-            <SimpleGrid
-              columns={{ base: 1, md: 3 }}
-              gap='20px'
-              mb={{ base: "20px", xl: "0px" }}>
-              <NFT
-                name='Swipe Circles'
-                author='By Peter Will'
-                bidders={[
-                  Avatar1,
-                  Avatar2,
-                  Avatar3,
-                  Avatar4,
-                  Avatar1,
-                  Avatar1,
-                  Avatar1,
-                  Avatar1,
-                ]}
-                image={Nft4}
-                currentbid='0.91 ETH'
-                download='#'
-              />
-              <NFT
-                name='Colorful Heaven'
-                author='By Mark Benjamin'
-                bidders={[
-                  Avatar1,
-                  Avatar2,
-                  Avatar3,
-                  Avatar4,
-                  Avatar1,
-                  Avatar1,
-                  Avatar1,
-                  Avatar1,
-                ]}
-                image={Nft5}
-                currentbid='0.91 ETH'
-                download='#'
-              />
-              <NFT
-                name='3D Cubes Art'
-                author='By Manny Gates'
-                bidders={[
-                  Avatar1,
-                  Avatar2,
-                  Avatar3,
-                  Avatar4,
-                  Avatar1,
-                  Avatar1,
-                  Avatar1,
-                  Avatar1,
-                ]}
-                image={Nft6}
-                currentbid='0.91 ETH'
-                download='#'
-              />
-            </SimpleGrid>
-          </Flex>
-        </Flex>
-        <Flex
-          flexDirection='column'
-          gridArea={{ xl: "1 / 3 / 2 / 4", "2xl": "1 / 2 / 2 / 3" }}>
-          <Card px='0px' mb='20px'>
-            <TableTopCreators
-              tableData={tableDataTopCreators}
-              columnsData={tableColumnsTopCreators}
-            />
-          </Card>
-          <Card p='0px'>
-            <Flex
-              align={{ sm: "flex-start", lg: "center" }}
-              justify='space-between'
-              w='100%'
-              px='22px'
-              py='18px'>
-              <Text color={textColor} fontSize='xl' fontWeight='600'>
-                History
-              </Text>
-              <Button variant='action'>See all</Button>
-            </Flex>
+  const { isOpen, onOpen, onClose } = useDisclosure();
+  const { isOpen: isPlatformOpen, onOpen: onPlatformOpen, onClose: onPlatformClose } = useDisclosure();
+  const [selectedOpportunity, setSelectedOpportunity] = useState(null);
+  const [selectedPlatform, setSelectedPlatform] = useState(null);
+  const [formData, setFormData] = useState({
+    amount: "",
+    period: "1 month"
+  });
+  const [lastStakes, setLastStakes] = useState([]); // State for storing last stakes
 
-            <HistoryItem
-              name='Colorful Heaven'
-              author='By Mark Benjamin'
-              date='30s ago'
-              image={Nft5}
-              price='0.91 ETH'
-            />
-            <HistoryItem
-              name='Abstract Colors'
-              author='By Esthera Jackson'
-              date='58s ago'
-              image={Nft1}
-              price='0.91 ETH'
-            />
-            <HistoryItem
-              name='ETH AI Brain'
-              author='By Nick Wilson'
-              date='1m ago'
-              image={Nft2}
-              price='0.91 ETH'
-            />
-            <HistoryItem
-              name='Swipe Circles'
-              author='By Peter Will'
-              date='1m ago'
-              image={Nft4}
-              price='0.91 ETH'
-            />
-            <HistoryItem
-              name='Mesh Gradients '
-              author='By Will Smith'
-              date='2m ago'
-              image={Nft3}
-              price='0.91 ETH'
-            />
-            <HistoryItem
-              name='3D Cubes Art'
-              author='By Manny Gates'
-              date='3m ago'
-              image={Nft6}
-              price='0.91 ETH'
-            />
-          </Card>
+  const handleOpportunityClick = (opportunityId) => {
+    setSelectedOpportunity(opportunityId);
+    onOpen();
+  };
+
+  const handleStake = () => {
+    // Add new stake to the list of last stakes after form submission
+    const opportunity = stakingOpportunities.find(opportunity => opportunity.id === selectedOpportunity);
+    const newStake = {
+      opportunityName: opportunity.name,
+      amount: formData.amount,
+      stakingPeriod: formData.period
+    };
+    setLastStakes([...lastStakes, newStake]);
+    onClose(); // Close modal after staking
+    setFormData({ amount: "", period: "1 month" }); // Reset form
+  };
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData({ ...formData, [name]: value });
+  };
+
+  const renderFormFields = () => {
+    if (!selectedOpportunity) return null;
+
+    const opportunity = stakingOpportunities.find(opportunity => opportunity.id === selectedOpportunity);
+
+    return (
+      <>
+        {opportunity.formFields.map((field) => (
+          <Flex key={field.label} mb="0.5rem">
+            <Text minW="120px">{field.label}:</Text>
+            {field.type === 'number' ? (
+              <input
+                type="number"
+                name="amount"
+                value={formData.amount}
+                onChange={handleChange}
+                placeholder={field.placeholder}
+                style={{ marginRight: '10px' }}
+              />
+            ) : (
+              <Select
+                name="period"
+                value={formData.period}
+                onChange={handleChange}
+                placeholder={field.placeholder}
+                style={{ marginRight: '10px' }}
+              >
+                {field.options.map(option => (
+                  <option key={option} value={option}>{option}</option>
+                ))}
+              </Select>
+            )}
+          </Flex>
+        ))}
+      </>
+    );
+  };
+
+  const handlePlatformClick = (platformId) => {
+    setSelectedPlatform(platformId);
+    onPlatformOpen();
+  };
+
+  const renderPlatformDetails = () => {
+    if (!selectedPlatform) return null;
+
+    const platform = lendingBorrowingPlatforms.find(platform => platform.id === selectedPlatform);
+
+    return (
+      <Box>
+        <Image src={platform.image} alt={platform.name} height="200px" objectFit="cover" mb="10px" />
+        <Text fontSize="lg" fontWeight="bold">{platform.name}</Text>
+        <Text mt="10px">{platform.description}</Text>
+        <Text mt="10px"><strong>Rates:</strong> {platform.rates}</Text>
+        <Text mt="10px"><strong>Terms:</strong> {platform.terms}</Text>
+      </Box>
+    );
+  };
+
+  return (
+    <Box pt={{ base: "130px", md: "80px", xl: "80px" }}>
+      <Grid
+        templateColumns={{ base: "1fr", xl: "1fr 0.46fr" }}
+        gap={{ base: "20px", xl: "20px" }}
+        display="grid"
+      >
+        {/* Staking Opportunities Section */}
+        <Flex flexDirection="column" alignItems="left">
+          <Box mt="40px"> {/* Additional top margin */}
+            <Text fontSize="2xl" fontWeight="700" color={textColor} mb="20px">
+              Staking Opportunities
+            </Text>
+            <SimpleGrid columns={{ base: 1, md: 3 }} gap="20px">
+              {stakingOpportunities.map(opportunity => (
+                <Card
+                  key={opportunity.id}
+                  height="600px"
+                  display="flex"
+                  flexDirection="column"
+                  justifyContent="space-between"
+                  p="20px"
+                >
+                  <Image src={opportunity.image} alt={opportunity.name} height="330px" objectFit="cover" />
+                  <Flex align="center" mt="20px">
+                    <Text color={textColor} fontSize="lg" fontWeight="bold">
+                      {opportunity.name}
+                    </Text>
+                  </Flex>
+                  <Text mt="10px" color={textColor} fontSize="md">
+                    {opportunity.description}
+                  </Text>
+                  <Text mt="10px" color={textColor} fontSize="md">
+                    <strong>APY:</strong> {opportunity.apy}
+                  </Text>
+                  <Text mt="10px" color={textColor} fontSize="md">
+                    <strong>Lock-In Period:</strong> {opportunity.lockInPeriod}
+                  </Text>
+                  <Text mt="10px" color={textColor} fontSize="md">
+                    <strong>Requirements:</strong> {opportunity.requirements}
+                  </Text>
+                  <Button mt="10px" colorScheme="blue" onClick={() => handleOpportunityClick(opportunity.id)} w="full">
+                    Join Pool
+                  </Button>
+                </Card>
+              ))}
+            </SimpleGrid>
+            
+          </Box>
+        </Flex>
+
+        {/* Lending/Borrowing Opportunities Section */}
+        <Flex flexDirection="column" gridColumn="2 / 3" alignItems="center">
+          <Box mt="40px">
+            <Text fontSize="2xl" fontWeight="700" color={textColor} mb="20px">
+              Lending/Borrowing Opportunities
+            </Text>
+            <SimpleGrid columns={{ base: 1, md: 2 }} gap="20px">
+              {lendingBorrowingPlatforms.map(platform => (
+                <Card
+                  key={platform.id}
+                  height="530px"
+                  display="flex"
+                  flexDirection="column"
+                  justifyContent="space-between"
+                  p="20px"
+                >
+                  <Image src={platform.image} alt={platform.name} height="200px" objectFit="cover" />
+                  <Flex align="center" mt="20px">
+                    <Text color={textColor} fontSize="lg" fontWeight="bold">
+                      {platform.name}
+                    </Text>
+                  </Flex>
+                  <Text mt="10px" color={textColor} fontSize="md">
+                    {platform.description}
+                  </Text>
+                  <Text mt="10px" color={textColor} fontSize="md">
+                    <strong>Rates:</strong> {platform.rates}
+                  </Text>
+                  <Text mt="10px" color={textColor} fontSize="md">
+                    <strong>Terms:</strong> {platform.terms}
+                  </Text>
+                  <Button mt="10px" colorScheme="blue" w="full" onClick={() => handlePlatformClick(platform.id)}>
+                    Initiate Action
+                  </Button>
+                </Card>
+              ))}
+            </SimpleGrid>
+          </Box>
         </Flex>
       </Grid>
-      {/* Delete Product */}
+      <Active />
+
+      {/* Modal for staking opportunity */}
+      <Modal isOpen={isOpen} onClose={onClose}>
+        <ModalOverlay />
+        <ModalContent>
+          <ModalHeader>Join Staking Opportunity</ModalHeader>
+          <ModalCloseButton />
+          <ModalBody>
+            {renderFormFields()}
+          </ModalBody>
+          <ModalFooter>
+            <Button colorScheme="blue" mr={3} onClick={onClose}>
+              Close
+            </Button>
+            <Button variant="ghost" onClick={handleStake}>Stake</Button>
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
+
+      {/* Modal for lending/borrowing platform */}
+      <Modal isOpen={isPlatformOpen} onClose={onPlatformClose}>
+        <ModalOverlay />
+        <ModalContent>
+          <ModalHeader>Platform Details</ModalHeader>
+          <ModalCloseButton />
+          <ModalBody>
+            {renderPlatformDetails()}
+          </ModalBody>
+          <ModalFooter>
+            <Button colorScheme="blue" mr={3} onClick={onPlatformClose}>
+              Close
+            </Button>
+            <Button variant="ghost" onClick={() => alert('Action initiated')}>
+              Confirm Action
+            </Button>
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
     </Box>
   );
-}
+};
+
+export default Marketplace;
